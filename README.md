@@ -4,4 +4,4 @@
 A social app
 
 # Technologies Used
-#### Python, Flask, peewee, bcrypt, cors, JWT
+#### Python, Flask, peewee, PstgreSQL, bcrypt, cors, JWT

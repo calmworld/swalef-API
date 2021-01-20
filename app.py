@@ -10,6 +10,7 @@ PORT = 8000
 
 app = Flask(__name__)
 
+CORS(posts, origins=['http://localhost:3000'])
 app.register_blueprint(posts, url_prefix='/swalef')
 
 @app.before_request

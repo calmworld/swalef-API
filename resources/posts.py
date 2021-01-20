@@ -14,7 +14,7 @@ def get_all_posts():
   except models.DoesNotExist:
     return jsonify(data={}, status={"code": 401, "message": "error getting the data"})
 
-
+# create
 @posts.route('/', methods=["POST"])
 def create_post():
   payload = request.get_json()
@@ -23,14 +23,16 @@ def create_post():
   post_dict = model_to_dict(new_post)
   return jsonify(data=post_dict, status={"code": 200, "message": "success"})
 
-
+# show
 @posts.route('/<id>', methods=["GET"])
 def get_one_post(id):
   post = models.Posts.get_by_id(id)
-  print(post.__dict__)
-  return jsonify(data=model_to_dict(post), status={"code": 200, "message": "success"})
+  post_dict = model_to_dict(post)
+  comments = [model_to_dict(comment) for comment in post.comments]
+  feed = {"feed": post_dict, "comments": comments}
+  return jsonify(data=feed, status={"code": 200, "message": "success"})
 
-
+# update
 @posts.route('/<id>', methods=["PUT"])
 def update_post(id):
   payload = request.get_json()
@@ -38,6 +40,7 @@ def update_post(id):
   query.execute()
   return jsonify(data=model_to_dict(models.Posts.get_by_id(id)), status={"code": 200, "message": "success"})
 
+# delete
 @posts.route('/<id>', methods= ["DELETE"])
 def delete_post(id):
   post = models.Posts.get_by_id(id)

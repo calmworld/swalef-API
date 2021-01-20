@@ -4,6 +4,7 @@ import os
 
 import models
 from resources.posts import posts
+from resources.comments import comments
 
 DEBUG = True
 PORT = 8000
@@ -12,6 +13,9 @@ app = Flask(__name__)
 
 CORS(posts, origins=['http://localhost:3000'])
 app.register_blueprint(posts, url_prefix='/swalef')
+
+CORS(comments, origins=['http://localhost:3000'])
+app.register_blueprint(comments, url_prefix='/comments')
 
 @app.before_request
 def before_request():

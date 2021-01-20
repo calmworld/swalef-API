@@ -14,6 +14,7 @@ def get_all_posts():
   except models.DoesNotExist:
     return jsonify(data={}, status={"code": 401, "message": "error getting the data"})
 
+
 @posts.route('/', methods=["POST"])
 def create_post():
   payload = request.get_json()
@@ -21,3 +22,10 @@ def create_post():
   new_post = models.Posts.create(**payload)
   post_dict = model_to_dict(new_post)
   return jsonify(data=post_dict, status={"code": 200, "message": "success"})
+
+
+@posts.route('/<id>', methods=["GET"])
+def get_one_post(id)
+post = models.Posts.get_by_id(id)
+print(post.__dict__)
+return jsonify(data=model_to_dict(post), status={"code": 200, "message": "success"})

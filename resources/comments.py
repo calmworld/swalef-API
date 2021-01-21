@@ -1,6 +1,9 @@
 import models
 
-from flask import Blueprint('comments', 'comment', url_prefix='/comments')
+from flask import Blueprint, jsonify, request
+from playhouse.shortcuts import model_to_dict
+
+comments = Blueprint('comments', 'comment', url_prefix='/comments')
 
 # create
 @comments.route('/<id>', methods=["POST"])

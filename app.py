@@ -18,7 +18,7 @@ app.register_blueprint(posts, url_prefix='/swalef')
 CORS(comments, origins=['http://localhost:3000'])
 app.register_blueprint(comments, url_prefix='/comments')
 
-CORS(userss, origins=['http://localhost:3000'])
+CORS(users, origins=['http://localhost:3000'])
 app.register_blueprint(users, url_prefix='/users')
 
 @app.before_request

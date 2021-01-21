@@ -5,7 +5,7 @@ from flask_bcrypt import generate_password_hash, check_password_hash
 from playhouse.shortcuts import model_to_dict
 
 
-user = Blueprint('users', 'user', url_prefix='/user')
+user = Blueprint('users', 'user', url_prefix='/users')
 
 
 #sign up

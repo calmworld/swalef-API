@@ -3,13 +3,14 @@ import models
 from flask import request, jsonify, Blueprint
 from flask_bcrypt import generate_password_hash, check_password_hash
 from playhouse.shortcuts import model_to_dict
+import jwt
+import datetime
 
-
-user = Blueprint('users', 'user', url_prefix='/users')
+users = Blueprint('users', 'user', url_prefix='/users')
 
 
 #sign up
-@user.route('/create', methods=["POST"])
+@users.route('/create', methods=["POST"])
 def create_user():
   payload = request.get_json()
   try:
@@ -27,15 +28,16 @@ def create_user():
 
 
 #log in
-@user.route('/login', methods=["POST"])
+@users.route('/login', methods=["POST"])
 def login():
   payload = request.get_json()
   try:
     user = models.Users.get(models.Users.username == payload['username'])
     user_dict = model_to_dict(user)
     if(check_password_hash(user_dict['password'], payload['password'])):
+      token = jwt.encode({'id': user_dict['id'], 'username': user_dict['username'], 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60)}, 'THISISASECRETKEY')
       del user_dict['password']
-      return jsonify(data=user_dict, status={"code": 200, "message": "User logged in"})
+      return jsonify(data={"token": token.decode('UTF-8')}, status={"code": 200, "message": "User logged in"})
     else:
       return jsonify(data={}, status={"code": 401, "message": "username or password is incorrect"})
   except models.DoesNotExist:

@@ -21,6 +21,7 @@ class Posts(Model):
     title = CharField()
     body = CharField()
     topic = CharField()
+    created_by = ForeignKeyField(Users, backref='posts')
     created_at = DateTimeField(default=datetime.datetime.now)
 
     class Meta:

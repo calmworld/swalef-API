@@ -85,3 +85,14 @@ def delete_post(current_user, id):
   query = models.Posts.delete().where(models.Posts.id == id)
   query.execute()
   return jsonify(data=post_dict, status={"code": 200, "message": "success, deleted"})
+
+
+#Show User posts
+@rants.route('/myposts', methods=["GET"])
+@login_check
+def user_feeds(current_user):
+  user = models.Users.get_by_id(current_user['id'])
+  feeds = [model_to_dict(feed) for feed in user.posts]
+  return jsonify(data=feeds, status={"code": 200, "message": "user feeds success"})
+
+

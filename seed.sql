@@ -1,0 +1,3 @@
+INSERT INTO posts (id, body, title, created_at, created_by) VALUES (1, "Who else is watching Frasier", "Favorite Show", "Th, 21 Jan 2021 13:22:45 GMT", 1)
+INSERT INTO posts (id, body, title, created_at, created_by) VALUES (2, "Which wine do you prefer? red or white", "Wine lovers", "Th, 21 Jan 2021 11:31:49 GMT", 1)
+INSERT INTO posts (id, body, title, created_at, created_by) VALUES (3, "My dog eats snow", "Weird things that dogs do", "Th, 21 Jan 2021 14:31:57 GMT", 1)

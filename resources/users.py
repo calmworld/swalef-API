@@ -22,7 +22,7 @@ def create_user():
 
     user_dict = model_to_dict(user)
     del user_dict['password']
-    return jsonify(data=user_dict, status={"code" : 201, "message": "User successfully created"})
+    return jsonify(data={"token": token.decode('UTF-8')}, status={"code" : 201, "message": "User successfully created"})
 
 
 

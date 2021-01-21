@@ -35,13 +35,13 @@ PORT = 8000
 
 app = Flask(__name__)
 
-CORS(posts, origins=['http://localhost:3000'])
+CORS(posts, origins=['http://localhost:3000'], supports_credentials=True)
 app.register_blueprint(posts, url_prefix='/swalef')
 
-CORS(comments, origins=['http://localhost:3000'])
+CORS(comments, origins=['http://localhost:3000'], supports_credentials=True)
 app.register_blueprint(comments, url_prefix='/comments')
 
-CORS(users, origins=['http://localhost:3000'])
+CORS(users, origins=['http://localhost:3000'], supports_credentials=True)
 app.register_blueprint(users, url_prefix='/users')
 
 @app.before_request
@@ -58,14 +58,21 @@ def after_request(response):
     g.db.close()
     return response
 
+
 # The default URL ends in / ("my-website.com/").
 @app.route('/')
-def index():
-    return 'Hey check this out'
+# def index():
+#     return 'Hey check this out'
+
+@login_check
+def index(current_user):
+    return jsonify(data={}, status={"code": 200, "message": "session is valid"})
+
 
 if 'On_HEROKU' in os.environ:
     print('\non Heroku!')
     models.initialize()
+
 
 # run app
 if __name__ == '__main__':

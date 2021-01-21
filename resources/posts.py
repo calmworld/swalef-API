@@ -48,7 +48,7 @@ def get_all_posts():
 def create_post(current_user):
   payload = request.get_json()
   # print(payload)
-  new_post = models.Posts.create(title=payload['title'], body=payload['body'], created_by_id=current_user['id'])
+  new_post = models.Posts.create(title=payload['title'], body=payload['body'], created_by=current_user['id'])
   post_dict = model_to_dict(new_post)
   #hide the user who created the posts password
   del postt_dict['created_by']['password']

@@ -2,17 +2,45 @@ import models
 
 from flask import Blueprint, jsonify, request
 from playhouse.shortcuts import model_to_dict 
+from functools import wraps
+import jwt
+
 
 posts = Blueprint('swalef', 'post', url_prefix='swalef')
 
+# creating decorators was taken from https://www.youtube.com/watch?v=WxGBoY5iNXY
+# token_required = login_check
+def login_check(f):
+  @wraps(f)
+  def decorated(*args, **kwargs):
+    token = None
+
+    if 'x-access-token' in request.headers:
+      token = request.headers['x-access-token']
+    
+    if not token:
+      return jsonify(data={}, status={"code": 401, "message" : "Login required"})
+    
+    try:
+      data = jwt.decode(token, 'THISISASECRETKEY')
+      current_user = models.Users.get(models.Users.id == data['id'])
+    except:
+      return jsonify(data={}, status={"code": 401, "message": "Token has expired"})
+    
+    return f(current_user, *args, **kwargs)
+  return decorated
+
+# index
 @posts.route('/', methods=["GET"])
-def get_all_posts():
+@login_check
+def get_all_posts(current_user):
   try:
     posts = [model_to_dict(post) for post in models.Posts.select()]
     print(posts)
     return jsonify(data=posts, status={"code": 200, "message": "success"})
   except models.DoesNotExist:
     return jsonify(data={}, status={"code": 401, "message": "error getting the data"})
+
 
 # create
 @posts.route('/', methods=["POST"])

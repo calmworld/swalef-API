@@ -1,11 +1,34 @@
 from flask import Flask, jsonify, g, request
 from flask_cors import CORS
 import os
-
+from functools import wraps
+import jwt
 import models
 from resources.posts import posts
 from resources.comments import comments
 from resources.users import users
+
+
+def login_check(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = None
+
+        if 'x-access-token' in request.headers:
+            token = request.headers['x-access-token']
+
+        if not token:
+            return jsonify(data={}, status={"code": 401, "message" : "Login required"})
+
+        try:
+            data = jwt.decode(token, 'THISISASECRETKEY')
+            current_user = models.Users.get(models.Users.id == data['id'])
+        except:
+            return jsonify(data={}, status("code": 401, "message": "Token has expired"))
+
+        return f(current_user, *args, **kwargs)
+    return decorated
+
 
 DEBUG = True
 PORT = 8000

@@ -3,6 +3,7 @@ from flask_cors import CORS
 import os
 from functools import wraps
 import jwt
+from playhouse.shortcuts import model_to_dict
 import models
 from resources.posts import posts
 from resources.comments import comments
@@ -66,7 +67,8 @@ def after_request(response):
 
 @login_check
 def index(current_user):
-    return jsonify(data={}, status={"code": 200, "message": "session is valid"})
+    user_dict = model_to_dict(current_user)
+    return jsonify(data=user_dict, status={"code": 200, "message": "session is valid"})
 
 
 if 'On_HEROKU' in os.environ:

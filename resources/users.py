@@ -32,4 +32,11 @@ def login():
   payload = request.get_json()
   try:
     user = models.Users.get(models.Users.username == payload['username'])
-    user_dict = model_to_dict(user) 
+    user_dict = model_to_dict(user)
+    if(check_password_hash(user_dict['password'], payload['password'])):
+      del user_dict['password']
+      return jsonify(data=user_dict, status={"code": 200, "message": "User logged in"})
+    else:
+      return jsonify(data={}, status={"code": 401, "message": "username or password is incorrect"})
+  except models.DoesNotExist:
+    return jsonify(data={}, status={"code": 401, "message": "username or password is incorrect"}) 

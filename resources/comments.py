@@ -45,7 +45,7 @@ def create_comment(current_user, id):
 @comments.route('/<id>', methods=["PUT"])
 def update_comment(id):
     payload = request.get_json()
-    query = models.Comments.update(**payload.where(models.Comments.id == id))
+    query = models.Comments.update(**payload).where(models.Comments.id == id)
     query.execute()
     return jsonify(data=model_to_dict(models.Comments.get_by_id(id)), status={"code": 200, "message": "comment updated successfully"})
 

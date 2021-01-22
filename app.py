@@ -45,6 +45,8 @@ app.register_blueprint(comments, url_prefix='/comments')
 CORS(users, origins=['http://localhost:3000'], supports_credentials=True)
 app.register_blueprint(users, url_prefix='/users')
 
+CORS(app, origins=['http://localhost:3000'], supports_credentials=True)
+
 @app.before_request
 def before_request():
     """Connect to the database before each request."""
@@ -62,9 +64,6 @@ def after_request(response):
 
 # The default URL ends in / ("my-website.com/").
 @app.route('/')
-# def index():
-#     return 'Hey check this out'
-
 @login_check
 def index(current_user):
     user_dict = model_to_dict(current_user)

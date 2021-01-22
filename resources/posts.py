@@ -31,6 +31,7 @@ def login_check(f):
     return f(current_user, *args, **kwargs)
   return decorated
 
+
 # index
 @posts.route('/', methods=["GET"])
 def get_all_posts():
@@ -51,7 +52,7 @@ def create_post(current_user):
   new_post = models.Posts.create(title=payload['title'], body=payload['body'], topic=payload['topic'], created_by=current_user['id'])
   post_dict = model_to_dict(new_post)
   #hide the user who created the posts password
-  del postt_dict['created_by']['password']
+  del post_dict['created_by']['password']
 
   return jsonify(data=post_dict, status={"code": 200, "message": "success"})
 
@@ -74,6 +75,7 @@ def update_post(current_user, id):
   query = models.Posts.update(**payload).where(models.Posts.id == id)
   query.execute()
   return jsonify(data=model_to_dict(models.Posts.get_by_id(id)), status={"code": 200, "message": "success"})
+
 
 # delete
 @posts.route('/<id>', methods= ["DELETE"])
@@ -98,20 +100,12 @@ def user_feeds(current_user):
   return jsonify(data=feeds, status={"code": 200, "message": "user feeds success"})
 
 
-#test route
-# @posts.route('/testroute/<id>', methods=["GET"])
-# def testing(id):
-#   testing = models.Posts.select().where(models.Posts.id == id)
+#sort route
 @posts.route('/sort/<topic>', methods=["GET"])
 def testing(topic):
-  # testing = models.Posts.select().where(models.Posts.topic == topic)
-  # feeds = [model_to_dict(feed) for feed in testing]
-  # print(posts)
-  # feeds = [model_to_dict(feed) for post in models.Posts.select('id' == 2)]
-  # return 'jsonify(data=testing)'
   feeds = ''
   if topic == 'recent':
-    feeds.query = models.Posts.select().order_by(-models.Posts.created_at).limit(10)
+    feeds_query = models.Posts.select().order_by(-models.Posts.created_at).limit(10)
     feeds = [model_to_dict(feed) for feed in feeds_query]
   elif topic == 'all':
     feeds_query = models.Posts.select()

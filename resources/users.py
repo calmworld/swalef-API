@@ -21,6 +21,7 @@ def create_user():
     user = models.Users.create(**payload)
 
     user_dict = model_to_dict(user)
+    token = jwt.encode({'id': user_dict['id'], 'username': user_dict['username'], 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60)}, 'THISISASECRETKEY')
     del user_dict['password']
     return jsonify(data={"token": token.decode('UTF-8')}, status={"code" : 201, "message": "User successfully created"})
 
@@ -34,11 +35,13 @@ def login():
   try:
     user = models.Users.get(models.Users.username == payload['username'])
     user_dict = model_to_dict(user)
+
     if(check_password_hash(user_dict['password'], payload['password'])):
       token = jwt.encode({'id': user_dict['id'], 'username': user_dict['username'], 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60)}, 'THISISASECRETKEY')
       del user_dict['password']
       return jsonify(data={"token": token.decode('UTF-8')}, status={"code": 200, "message": "User logged in"})
     else:
       return jsonify(data={}, status={"code": 401, "message": "username or password is incorrect"})
+  
   except models.DoesNotExist:
     return jsonify(data={}, status={"code": 401, "message": "username or password is incorrect"}) 

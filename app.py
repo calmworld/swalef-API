@@ -70,7 +70,6 @@ def index(current_user):
     user_dict = model_to_dict(current_user)
     return jsonify(data=user_dict, status={"code": 200, "message": "session is valid"})
 
-
 if 'On_HEROKU' in os.environ:
     print('\non Heroku!')
     models.initialize()

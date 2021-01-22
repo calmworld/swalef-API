@@ -16,6 +16,7 @@ mccabe==0.6.1
 peewee==3.14.0
 psycopg2==2.8.6
 pycparser==2.20
+PyJWT==1.7.1
 pylint==2.6.0
 six==1.15.0
 toml==0.10.2
